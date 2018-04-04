@@ -1,0 +1,54 @@
+{% macro button(text,func="void()") %}
+    <div class="weui-btn-area">
+        <a class="weui-btn weui-btn_primary" href="javascript:{{ func }}; " id="showTooltips">{{ text }}</a>
+    </div>
+{% endmacro %}
+
+{% macro input(start,content,end,id) %}
+    <div class="weui-cell weui-cell_select weui-cell_select-before">
+        {% if start %}
+            <div class="weui-cell__hd">
+                <div class="weui-select">
+                    {{ start }}
+                </div>
+            </div>
+        {% endif %}
+        <div class="weui-cell__bd">
+            <input id="{{ id }}" class="weui-input" type="{{ content.type }}"
+                   placeholder="{{ content.placeholder }}" emptyTips="{{ content.emptyTips }}"
+                   notMatchTips="{{ content.notMatchTips }}">
+        </div>
+        {% if end %}
+            <div class="weui-cell__ft">
+                {% if end.error %}
+                    <i class="weui-icon-warn"></i>
+                {% endif %}
+                {% if end.text %}
+                    <button type="button" class="weui-vcode-btn">{{ end.text }}</button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro check(text,id,func="javascript:;") %}
+    <label for="weuiAgree" class="weui-agree">
+        <input id="{{ id }}" type="checkbox" class="weui-agree__checkbox" emptyTips="请阅读并同意协议！">
+        <span class="weui-agree__text">
+                已阅读并同意<a href={{ func }}>{{ text }}</a>
+            </span>
+    </label>
+{% endmacro %}
+
+{% macro icon(src,height=200,width=200) %}
+    <div class="icon-box" style="text-align: center">
+        <img src={{ src }} height="{{ height }}" width="{{ width }}">
+    </div>
+{% endmacro %}
+
+{% macro rowSpace(height) %}
+    <div style="display: block;height: {{ height }}em">
+    </div>
+{% endmacro %}
+
+
