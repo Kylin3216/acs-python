@@ -1,5 +1,4 @@
 import urllib.parse
-
 import requests
 
 from .config import AcsConfig
@@ -25,7 +24,6 @@ def get_token(telephone, code):
     body = urllib.parse.urlencode(data)
     headers = {"Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"}
     req = requests.post(AcsConfig.ACS_TOKEN_URL, data=body, headers=headers)
-    print(req.status_code)
     return req.json()
 
 

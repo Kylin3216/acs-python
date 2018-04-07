@@ -1,0 +1,14 @@
+{% extends "wx_templates/wx_base.html" %}
+{% import "wx_templates/wx_components.html" as component %}
+{% block content_bd %}
+    <div id="wait" hidden>
+        {{ component.wxMessage("处理中","取出商品后请关门",type="waiting") }}
+    </div>
+{% endblock %}
+{% block content_ft %}
+    {{ component.button("立即开门","openDoor("+door+")") }}
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script src="/static/wx_scripts/door.js"></script>
+{% endblock %}

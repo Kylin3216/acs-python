@@ -1,111 +1,85 @@
 function submit() {
     if (checkTel() && checkCode() && checkCheck()) {
-        let loading = weui.loading('请稍后...');
-        $.post('/login', {name: $("#telephone").val(), code: $("#code").val()}, function (data) {
-            if (data == "ok") {
+        $.showLoading("请稍后...")
+        $.post('/login', $("form").serialize(), function (data) {
+            if (data === "ok") {
                 setTimeout(function () {
-                    loading.hide();
-                    weui.toast('提交成功', 3000);
+                    $.hideLoading()
+                    $.toast("提交成功");
                 }, 1500);
             } else {
-                loading.hide();
-                weui.toast(data, 2000);
+                $.hideLoading();
+                $.toast(data, "forbidden");
             }
-
         })
-        loading.hide();
     }
+    $.hideLoading();
 }
 
-$("#telephone").keydown(function () {
-    hideError($(this)[0]);
-})
-$("#telephone").focus(function () {
-    hideError($(this)[0]);
-})
-$("#code").keydown(function () {
-    hideError($(this)[0]);
-})
-$("#code").focus(function () {
-    hideError($(this)[0]);
-})
-$("#telephone").blur(function () {
+$("form input:even").blur(function () {
     checkTel();
 })
-$("#code").blur(function () {
+$("form input:odd").blur(function () {
     checkCode();
 })
-$(".weui-vcode-btn").click(function () {
+$("form button").click(function () {
     if (checkTel()) {
-        $(".weui-vcode-btn")[0].disabled = true;
+        $(this)[0].disabled = true;
+        let that = $(this);
         let interval = 10;
-        $.get('/getSmsCode?telephone=' + $("#telephone").val(), function (data) {
-            if (data == "ok") {
-                $(".weui-vcode-btn").text(interval + "s后重试");
+        $.get('/getSmsCode/' + $("form input:first").val(), function (data) {
+            if (data === "ok") {
+                that.text(interval + "s后重试");
                 let val = setInterval(() => {
                     interval--;
-                    $(".weui-vcode-btn").text(interval + "s后重试");
+                    that.text(interval + "s后重试");
                     if (interval < 0) {
-                        $(".weui-vcode-btn").text("获取验证码");
-                        $(".weui-vcode-btn")[0].disabled = false;
+                        that.text("获取验证码");
+                        that[0].disabled = false;
                         clearInterval(val);
                     }
                 }, 1000)
             } else {
-                weui.toast('网络错误，请稍后重试', 2000);
-                $(".weui-vcode-btn")[0].disabled = false;
+                $.toast("网络错误，请稍后重试", "forbidden");
+                that[0].disabled = false;
             }
         })
     }
 })
 
 function checkTel() {
-    let tel = $("#telephone")[0];
+    let tel = $("form input")[0];
     if (!tel.value) {
-        showError(tel, "empty");
+        $.toptip("请输入手机号", 'error')
         return false;
     }
     if (!validateTel(tel.value)) {
-        showError(tel, "notMatch");
+        $.toptip("手机号格式不正确", 'error')
         return false;
     }
     return true;
 }
 
 function checkCode() {
-    let code = $("#code")[0];
+    let code = $("form input")[1];
     if (!code.value) {
-        showError(code, "empty");
+        $.toptip("请输入验证码", 'error')
         return false;
     }
     return true;
 }
 
 function checkCheck() {
-    let check = $("#check")[0];
+    let check = $("input:last")[0];
     if (!check.checked) {
-        showError(check, "empty");
+        $.toptip("请阅读并同意协议", 'error')
         return false;
     }
     return true;
 }
 
-/*type=  empty  ||  notMatch*/
-function showError(ele, type) {
-    weui.form.showErrorTips({
-        ele: ele,
-        msg: type
-    });
-}
-
-function hideError(ele) {
-    weui.form.hideErrorTips(ele);
-}
 
 function validateTel(value) {
     let regex = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
-    if (regex.test(value)) {
-        return true;
-    }
-    return false;
+    return regex.test(value);
 }

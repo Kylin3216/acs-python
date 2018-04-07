@@ -6,8 +6,8 @@
     <meta name="viewport"
           content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <link href="/static/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css">
+    <link rel="stylesheet" href="/static/weui/css/weui.min.css">
+    <link rel="stylesheet" href="/static/weui/css/jquery-weui.min.css">
     {% block head %}
     {% endblock %}
 </head>
@@ -22,20 +22,20 @@
             {% block content_bd %}
             {% endblock %}
         </div>
-        <div class="page__ft">
+        <div class="page__ft" style="width:100%;display: block;position: fixed;bottom: 1em">
             {% block content_ft %}
             {% endblock %}
         </div>
     </div>
 </div>
-<script src="/static/jquery/jquery.min.js"></script>
-<script src="https://res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
+<script src="/static/common/jquery.min.js"></script>
+<script src="/static/weui/script/jquery-weui.min.js"></script>
+<script src="/static/common/swiper.min.js"></script>
+<script src="/static/common/city-picker.min.js"></script>
+<script src="/static/common/fastclick.js"></script>
+<script src="/static/common/zepto.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 {% block script %}
 {% endblock %}
 </body>
-<footer>
-    {% block foot %}
-    {% endblock %}
-</footer>
 </html>

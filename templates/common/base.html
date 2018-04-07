@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ACS</title>
+    <meta name="viewport"
+          content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    {% block content_hd %}
+    {% endblock %}
+    {% block content_bd %}
+    {% endblock %}
+<div style="width:100%;display: block;position: fixed;bottom: 1em">
+    {% block content_ft %}
+    {% endblock %}
+</div>
+<script src="/static/common/jquery.min.js"></script>
+<script src="/static/common/swiper.min.js"></script>
+<script src="/static/common/city-picker.min.js"></script>
+<script src="/static/common/fastclick.js"></script>
+<script src="/static/common/zepto.js"></script>
+{% block script %}
+{% endblock %}
+</body>
+</html>

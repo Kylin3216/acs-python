@@ -1,9 +1,13 @@
-{% macro button(text,func="void()") %}
+{% macro button(text,func="void()",style="primary",disable=False) %}
     <div class="weui-btn-area">
-        <a class="weui-btn weui-btn_primary" href="javascript:{{ func }}; " id="showTooltips">{{ text }}</a>
+        {% if disable %}
+            <a class="weui-btn weui-btn_{{ style }} weui-btn_disabled" href="javascript:{{ func }}; "
+               id="showTooltips">{{ text }}</a>
+        {% else %}
+            <a class="weui-btn weui-btn_{{ style }}" href="javascript:{{ func }}; " id="showTooltips">{{ text }}</a>
+        {% endif %}
     </div>
 {% endmacro %}
-
 {% macro input(start,content,end,id) %}
     <div class="weui-cell weui-cell_select weui-cell_select-before">
         {% if start %}

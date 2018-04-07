@@ -1,33 +1,30 @@
-{% extends "wx_base.html" %}
-{% import "wx_forms.html" as forms %}
+{% extends "wx_templates/wx_base.html" if client==1 else "ap_templates/ap_base.html" %}
+{% if client==1 %}
+    {% import "wx_templates/wx_components.html" as component %}
+{% else %}
+    {% import "ap_templates/ap_components.html" as component %}
+{% endif %}
+{% import "common/util.html" as util %}
 {% block content_hd %}
-    {{ forms.rowSpace(1) }}
-    {{ forms.icon("/static/logo.png") }}
-    {{ forms.rowSpace(2) }}
+    {{ util.rowSpace(1) }}
+    {{ util.icon("/static/logo.png") }}
+    {{ util.rowSpace(2) }}
 {% endblock %}
 {% block content_bd %}
-    <form id="form">
-        <!--手机号 -->
-        {{ forms.input(
-            "+86",
-            {"type":"tel","placeholder":"请输入手机号","emptyTips":"请输入手机号！","notMatchTips":"请输入正确的手机号！"},
-            {"error":""},
-            id=  "telephone"
-        ) }}
-        <!--验证码 -->
-        {{ forms.input(
-            "验证码",
-            {"type":"number","placeholder":"请输入验证码","emptyTips":"请输入验证码！","notMatchTips":"验证码不正确！"},
-            {"error":"","text":"获取验证码"},
-            id="code"
-        ) }}
-        {{ forms.rowSpace(1) }}
-        <!--协议 -->
-        {{ forms.check("《相关条款》","check") }}
-        <!--确认 -->
-        {{ forms.button("确定","submit()") }}
-    </form>
+    {{ component.loginForm("/login") }}
+    {{ util.rowSpace(1) }}
+    <!--协议 -->
+    {{ component.check("《相关条款》") }}
+    <!--确认 -->
+    {{ component.button("确定","submit()") }}
+
 {% endblock %}
 {% block script %}
+    {{ super() }}
+    {% if error %}
+        <script>
+            $.toast("{{ error }}", "cancel")
+        </script>
+    {% endif %}
     <script src="/static/wx_scripts/login.js"></script>
 {% endblock %}

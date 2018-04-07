@@ -6,3 +6,10 @@ class AcsConfig:
     CABINET_STATUS_URL = "http://47.98.50.243:8080/order/GetGabinetStatus"
     REQUEST_URL = "http://47.98.50.243:8080/order/GetByRequest"
     OPEN_SIGNAL_URL = "http://47.98.50.243:8080/order/GetOpenSingnal"
+
+
+class DoorState:
+    NO_RESPONSE = 0
+    NOT_OPEN = 1
+    OPENED = 2
+    CLOSED = 9

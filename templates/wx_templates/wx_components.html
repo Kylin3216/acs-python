@@ -1,0 +1,63 @@
+{#按钮#}
+{% macro button(text,func="void()",style="primary",disable=False) %}
+    <div class="weui-btn-area">
+        {% if disable %}
+            <a class="weui-btn weui-btn_{{ style }} weui-btn_disabled" href="javascript:{{ func }}"
+               id="showTooltips">{{ text }}</a>
+        {% else %}
+            <a class="weui-btn weui-btn_{{ style }}" href="javascript:{{ func }}">{{ text }}</a>
+        {% endif %}
+    </div>
+{% endmacro %}
+{#消息提示#}
+{% macro wxMessage(title,content,url="",urlText="",type="info") %}
+    <div class="weui-msg">
+        <div class="weui-msg__icon-area">
+            <i class="weui-icon-{{ type }} weui-icon_msg"></i>
+        </div>
+        <div class="weui-msg__text-area">
+            <h2 class="weui-msg__title">{{ title }}</h2>
+            <p class="weui-msg__desc">{{ content }} <a href="{{ url }}">{{ urlText }}</a></p>
+        </div>
+    </div>
+{% endmacro %}
+{#登录#}
+{% macro loginForm(route) %}
+    <form action="{{ route }}" method="post">
+        <div class="weui-cell weui-cell_select weui-cell_select-before">
+            <div class="weui-cell__hd">
+                <div class="weui-select">
+                    +86
+                </div>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="tel" name="telephone" placeholder="请输入手机号">
+            </div>
+        </div>
+        <div class="weui-cell weui-cell_select weui-cell_select-before">
+            <div class="weui-cell__hd">
+                <div class="weui-select">
+                    验证码
+                </div>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="number" name="code" placeholder="请输入验证码">
+            </div>
+            <div class="weui-cell__ft">
+                <button type="button" class="weui-vcode-btn">获取验证码</button>
+            </div>
+        </div>
+    </form>
+{% endmacro %}
+{% macro input(start,content,end,id) %}
+{% endmacro %}
+
+{% macro check(text,func="javascript:;") %}
+    <label class="weui-agree">
+        <input type="checkbox" class="weui-agree__checkbox">
+        <span class="weui-agree__text">
+                已阅读并同意<a href={{ func }}>{{ text }}</a>
+            </span>
+    </label>
+{% endmacro %}
+

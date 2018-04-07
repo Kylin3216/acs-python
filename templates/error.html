@@ -1,0 +1,9 @@
+{% extends "wx_templates/wx_base.html" %}
+{% import "wx_templates/wx_components.html"  as component %}
+{% block content_bd %}
+    {% if type=="200" %}
+        {{ component.wxMessage("提示","请在微信或支付宝中打开此链接") }}
+    {% else %}
+        {{ component.wxMessage(type,error,"/","返回首页","warn") }}
+    {% endif %}
+{% endblock %}
