@@ -2,15 +2,30 @@
 from flask import Flask, jsonify, render_template, redirect, make_response, session, request, g, url_for
 from flask_cache import Cache
 from config import Config, check_client, ClientType
-from weixin import Map
-from wechat import msgRoute, payRoute, mpRoute, authRoute, get_wx_config
+from weixin import Map, WeixinLogin
+from wechat import msgRoute, payRoute, mpRoute, get_wx_config, wxPay
+from wechat.config import WxConfig
 from acs import acsAuth, acsDoor
+from model import OrderData
 import random
+from datetime import datetime
 
 Flask.secret_key = "acs"
 
 app = Flask(__name__)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+wx_login = WeixinLogin(WxConfig.APPID, WxConfig.APPSECRET)
+
+
+def wx_authorized(func):
+    def decorator(*args, **kwargs):
+        if Config.OPENID not in session:
+            return func(*args, **kwargs)
+        callback = url_for("authorized", _external=True)
+        url = wx_login.authorize(callback, "snsapi_base")
+        return redirect(url)
+
+    return decorator
 
 
 def login_require(func):
@@ -33,12 +48,24 @@ def before_request():
 
 
 @app.route("/")
+@wx_authorized
 @login_require
 def index():
-    data = get_wx_config()
     if g.client == ClientType.WEI_XIN:
+        data = get_wx_config()
         return render_template("index.html", config=data, client=g.client)
     return render_template("index.html", client=g.client)
+
+
+@app.route("/authorized")
+def authorized():
+    code = request.args.get("code")
+    if not code:
+        return "ERR_INVALID_CODE", 400
+    data = wx_login.access_token(code)
+    openid = data.openid
+    session[Config.OPENID] = openid
+    return redirect("/")
 
 
 @app.route("/login", methods=["get", "post"])
@@ -61,15 +88,27 @@ def door():
     return render_template("door.html", client=g.client, door="1")
 
 
+@app.route("/order")
+def order():
+    paid = [
+        OrderData(1, "1000", "测试商品1已支付", "测试商品1", datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")),
+        OrderData(2, "400", "测试商品2已支付", "测试商品2", datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")),
+        OrderData(3, "600", "测试商品3已支付", "测试商品3", datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")),
+        OrderData(4, "800", "测试商品4已支付", "测试商品4", datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"))
+    ]
+    unpaid = [
+        OrderData(3, "1000", "测试商品未支付", "测试商品", datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S"), False)
+    ]
+    if g.client == ClientType.WEI_XIN:
+        data = get_wx_config()
+        return render_template("order.html", client=g.client, config=data, paid=paid, unpaid=unpaid)
+    return render_template("order.html", client=g.client, paid=paid, unpaid=unpaid)
+
+
 @app.route("/doQrCode")
 def do_qr_code():
     result = request.args.get("qrCode")
     return redirect(url_for("door", result=result))
-
-
-@app.route("/order")
-def order():
-    return render_template("order.html", client=g.client)
 
 
 # ********************api路由********************
@@ -99,6 +138,13 @@ def check_door_state():
     if r < 0.5:
         return "false"
     return "ok"
+
+
+@app.route("/doJsPay", methods=["post"])
+def do_js_pay():
+    order_id = request.form["orderId"]
+    data = wxPay.js_pay(order_id)
+    return data
 
 
 # 微信消息路由

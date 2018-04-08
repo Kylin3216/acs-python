@@ -1,0 +1,33 @@
+{% extends "wx_templates/wx_base.html" if client==1 else "ap_templates/ap_base.html" %}
+{% if client==1 %}
+    {% import "wx_templates/wx_components.html" as component %}
+{% else %}
+    {% import "ap_templates/ap_components.html" as component %}
+{% endif %}
+{% block content_hd %}
+{% endblock %}
+{% block content_bd %}
+    {% call(flag)  component.orderTab() %}
+        {% if flag %}
+            {{ component.preview(paid,"viewDetail") }}
+        {% else %}
+            {{ component.preview(unpaid,"pay") }}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    {% if client==1 %}
+        <script>
+            wx.config({
+                debug: true,
+                appId: "{{config['appId']}}",
+                timestamp: "{{config['timestamp']}}",
+                nonceStr: "{{config['noncestr']}}",
+                signature: "{{config['sign']}}",
+                jsApiList: ["chooseWXPay"]
+            })
+        </script>
+        <script src="/static/wx_scripts/order.js"></script>
+    {% endif %}
+{% endblock %}

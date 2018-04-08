@@ -10,19 +10,22 @@
     {% endblock %}
 </head>
 <body>
-    {% block content_hd %}
-    {% endblock %}
-    {% block content_bd %}
-    {% endblock %}
+{% block content_hd %}
+{% endblock %}
+{% block content_bd %}
+{% endblock %}
 <div style="width:100%;display: block;position: fixed;bottom: 1em">
     {% block content_ft %}
     {% endblock %}
 </div>
 <script src="/static/common/jquery.min.js"></script>
-<script src="/static/common/swiper.min.js"></script>
-<script src="/static/common/city-picker.min.js"></script>
 <script src="/static/common/fastclick.js"></script>
-<script src="/static/common/zepto.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="/static/common/zepto.min.js"></script>
 {% block script %}
 {% endblock %}
 </body>

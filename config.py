@@ -4,6 +4,7 @@ import re
 class Config:
     TOKEN_KEY = "_token"
     USER_KEY = "_user"
+    OPENID = "_openid"
 
 
 class ClientType:

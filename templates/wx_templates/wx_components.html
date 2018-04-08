@@ -61,3 +61,60 @@
     </label>
 {% endmacro %}
 
+{#卡片  数据结构为
+{
+"title":"",
+"title_detail":"",
+"detail":[{"title":"","title_detail":""},{"title":"","title_detail":""},...]
+"button":""
+}
+#}
+{% macro preview(list,func) %}
+    {% for data in list %}
+        <div style="margin: 1em;border: solid 1px #d8d8d8">
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__hd">
+                    <label class="weui-form-preview__label">{{ data.title }}</label>
+                    <em class="weui-form-preview__value">{{ data.title_detail }}</em>
+                </div>
+                <div class="weui-form-preview__bd">
+                    {% for detail in data.detail %}
+                        <div class="weui-form-preview__item">
+                            <label class="weui-form-preview__label">{{ detail.title }}</label>
+                            <span class="weui-form-preview__value">{{ detail.title_detail }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="weui-form-preview__ft">
+                    {#<a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">{{ data.button }}</a>#}
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary"
+                       href="javascript:{{ func }} ( {{ data.id }} ) ">
+                        {{ data.button }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+{# tab 控制#}
+{% macro orderTab() %}
+    <div class="weui-tab">
+        <div class="weui-navbar">
+            <a class="weui-navbar__item weui-bar__item--on" href="#unpaid">
+                待支付订单
+            </a>
+            <a class="weui-navbar__item" href="#paid">
+                已支付订单
+            </a>
+        </div>
+        <div class="weui-tab__bd">
+            <div id="unpaid" class="weui-tab__bd-item weui-tab__bd-item--active">
+                {{ caller(False) }}
+            </div>
+            <div id="paid" class="weui-tab__bd-item">
+                {{ caller(True) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
